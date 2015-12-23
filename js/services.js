@@ -4,7 +4,7 @@ angular.module('app.services', [])
 
 }])
 
-.service('BlankService', [function(){
-
+.service('MeetingService', [function(){
+this.selectedMeeting = 9;
 }]);
 

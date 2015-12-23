@@ -1,5 +1,8 @@
 <ion-view title="Veiw meeting">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <h1>Meeting details</h1>
+        <h1 ng-show="meetingService.selectedMeeting == meeting.id" ng-repeat="meeting in meetings" >{{meeting.name}}</h1>
+		<ion-list>
+            <p ng-show="meetingService.selectedMeeting == meeting.id" ng-repeat="meeting in meetings" >{{meeting.name + "   " + meeting.distance + " miles away. " +meeting.details}}</p>
+        </ion-list>
     </ion-content>
 </ion-view>
