@@ -6,5 +6,9 @@ angular.module('app.services', [])
 
 .service('MeetingService', [function(){
 this.selectedMeeting = 9;
-}]);
+}])
 
+.service('LoginService', [function(){
+this.isLoggedIn = false;
+this.user;
+}]);

@@ -1,26 +1,68 @@
 angular.module('app.controllers', [])
   
-.controller('loginCtrl', function($scope) {
+.controller('loginCtrl', function($scope,$location,LoginService) {
+  $scope.data = {};
+ 
+$scope.loginEmail = function(){
+  Parse.User.logIn($scope.data.username, $scope.data.password, {
+    success: function(user) {
+      // Do stuff after successful login.
+		LoginService.isLoggedIn = true;
+		LoginService.user = user;
+//		alert("success!");
+		$location.path('/page4/page5');
+    },
+    error: function(user, error) {
+      // The login failed. Check error to see why.
+      alert("error!");
+    }
+  });
+};
+})
+   
+.controller('signupCtrl', function($scope,$location) {
+  $scope.data = {};
+ 
+$scope.signupEmail = function(){
+	alert("triggered");
+  //Create a new user on Parse
+  var user = new Parse.User();
+  user.set("username", $scope.data.username);
+  user.set("password", $scope.data.password);
+  user.set("email", $scope.data.email);
+ 
+  // other fields can be set just like with Parse.Object
+  //user.set("somethingelse", "like this!");
+ 
+  user.signUp(null, {
+    success: function(user) {
+      // Hooray! Let them use the app now.
+      alert("success! Please log in.");
+	  $location.path("/page1");
+    },
+    error: function(user, error) {
+      // Show the error message somewhere and let the user try again.
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+ 
+};
+ 
+})
+   
+.controller('welcomeCtrl', function($scope,LoginService) {
 
 })
    
-.controller('signupCtrl', function($scope) {
+.controller('newMeetingCtrl', function($scope,LoginService) {
 
 })
    
-.controller('welcomeCtrl', function($scope) {
+.controller('buddiesCtrl', function($scope,LoginService) {
 
 })
    
-.controller('newMeetingCtrl', function($scope) {
-
-})
-   
-.controller('buddiesCtrl', function($scope) {
-
-})
-   
-.controller('meetingsCtrl', function($scope,MeetingService) {
+.controller('meetingsCtrl', function($scope,MeetingService,LoginService) {
   $scope.meetings = theMeetings;
   $scope.setMeeting=function(val){
 	MeetingService.selectedMeeting=val;
@@ -28,11 +70,11 @@ angular.module('app.controllers', [])
   
 })
       
-.controller('newBuddyCtrl', function($scope) {
+.controller('newBuddyCtrl', function($scope,LoginService) {
 
 })
    
-.controller('veiwMeetingCtrl', function($scope,MeetingService) {
+.controller('veiwMeetingCtrl', function($scope,MeetingService,LoginService) {
 	$scope.meetings = theMeetings;
 	$scope.meetingService=MeetingService;
 	
