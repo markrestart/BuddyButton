@@ -54,7 +54,7 @@ $scope.signupEmail = function(){
 
 })
    
-.controller('newMeetingCtrl', function($scope,LoginService) {
+.controller('newMeetingCtrl', function($scope,LoginService,MeetingService,$location) {
 	$scope.listing ={};
 	console.log(LoginService.user);
 
@@ -62,7 +62,6 @@ $scope.signupEmail = function(){
 		success: function (point) {
 			//use current location
 			$scope.myLocation = point;
-			console.log(point);
 		}
 	});
 	
@@ -76,12 +75,13 @@ $scope.signupEmail = function(){
 	Location: $scope.myLocation,
 	Details: $scope.listing.details,
 	Name: $scope.listing.name,
-	Time: $scope.listing.hours,
+	Time: parseInt($scope.listing.hours),
 	Attending: [$scope.username],
 	},{
 success: function(myMeeting) {
 // The save was successful.
-      alert(myMeeting);
+      MeetingService.selectedMeeting = myMeeting;
+	  $location.path("/page9");
 },
 error: function(myMeeting, error) {
 // The save failed.  Error is an instance of Parse.Error.
@@ -96,10 +96,25 @@ error: function(myMeeting, error) {
 })
    
 .controller('meetingsCtrl', function($scope,MeetingService,LoginService) {
-  $scope.meetings = theMeetings;
-  $scope.setMeeting=function(val){
-	MeetingService.selectedMeeting=val;
-  };
+$scope.meetingsList = [];
+var query = new Parse.Query('Meetings');
+query.find({
+  success: function(results) {
+	console.log("Results: " + results[0];
+	$scope.meettings = [];
+  for (i = 0; i < results.length; i++) { 
+	$scope.themeeting = {};
+	$scope.theMeeting.name = results[i].get("Name");
+	$scope.theMeeting.details = results[i].get("Details");
+	$scope.theMeeting.time = results[i].get("Time");
+	$scope.theMeeting.location = results[i].get("Location");
+	$scope.meettings.push(theMeeting);
+}
+  },
+  error: function(error) {
+    // error is an instance of Parse.Error.
+  }
+});
   
 })
       
@@ -108,14 +123,20 @@ error: function(myMeeting, error) {
 })
    
 .controller('veiwMeetingCtrl', function($scope,MeetingService,LoginService) {
-	$scope.meetings = theMeetings;
-	$scope.meetingService=MeetingService;
+	$scope.meeting = {}
+	$scope.meeting.name = MeetingService.selectedMeeting.get("Name");
+	$scope.meeting.details = MeetingService.selectedMeeting.get("Details");
+	$scope.meeting.time = MeetingService.selectedMeeting.get("Time");
+	$scope.meeting.location = MeetingService.selectedMeeting.get("Location");
+	$scope.meeting.attending = MeetingService.selectedMeeting.get("Attending");
 	
-})
+//		Parse.GeoPoint.current({
+//		success: function (point) {
+			//use current location
+//			currentLocation = point;
+//			console.log(currentLocation + " is " + point);
+//		}
+//	});
 
-   var theMeetings = [
-  { id: 1, name: 'Coffee?', distance: 10, details: 'Hey, I\'m at that place that sells coffee.'},
-  { id: 2, name: 'Grab lunch.', distance: .5, details: 'Grabbing lunch, any one care to join?'},
-  { id: 3, name: 'Hang out between classes', distance: 3.4, details: 'Got an hour before class. hang out?'},
-  { id: 4, name: 'stuff', distance: 5.1, details: 'yeah'}
-];
+//	$scope.meeting.distance = currentLocation.milesTo($scope.meeting.location);
+})

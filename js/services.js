@@ -5,7 +5,8 @@ angular.module('app.services', [])
 }])
 
 .service('MeetingService', [function(){
-this.selectedMeeting = 9;
+this.selectedMeeting;
+
 }])
 
 .service('LoginService', [function(){
