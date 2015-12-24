@@ -1,18 +1,20 @@
 <ion-view title="New Meeting">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
+		{{"New meeting by " + username}}
         <form class="list">
             <label class="item item-input">
                 <span class="input-label">Meeting name</span>
-                <input type="text" placeholder="">
+                <input ng-model="listing.name" type="text" placeholder="">
             </label>
             <label class="item item-input">
-                <span class="input-label">Details</span><textarea placeholder=""> </textarea>
+                <span class="input-label">Details</span><textarea ng-model="listing.details" placeholder=""> </textarea>
             </label>
-            <ion-item class="range range-dark">Hours
-                <input type="range" value="1" min="1" max="5"><p id = "theHours">1</p>
+            <ion-item class="range range-dark">{{listing.hours + " Hours"}}
+                <input ng-model="listing.hours" type="range" value="1" min="1" max="5">
             </ion-item>
         </form>
         <form class="list"></form>
-        <a href="#/page9" class="button button-stable button-block ">Post meeting</a>
+		{{myLocation}}
+        <button ng-click="postMeeting()" class="button button-stable button-block ">Post meeting</button>
     </ion-content>
 </ion-view>

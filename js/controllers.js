@@ -55,7 +55,40 @@ $scope.signupEmail = function(){
 })
    
 .controller('newMeetingCtrl', function($scope,LoginService) {
+	$scope.listing ={};
+	console.log(LoginService.user);
 
+	Parse.GeoPoint.current({
+		success: function (point) {
+			//use current location
+			$scope.myLocation = point;
+			console.log(point);
+		}
+	});
+	
+	$scope.username = LoginService.user.get("username");
+	console.log($scope.username);
+	
+	$scope.postMeeting=function(){
+	//verify forms
+	meetingPost = new Parse.Object("Meetings");
+	meetingPost.save({
+	Location: $scope.myLocation,
+	Details: $scope.listing.details,
+	Name: $scope.listing.name,
+	Time: $scope.listing.hours,
+	Attending: [$scope.username],
+	},{
+success: function(myMeeting) {
+// The save was successful.
+      alert(myMeeting);
+},
+error: function(myMeeting, error) {
+// The save failed.  Error is an instance of Parse.Error.
+      alert("Error: " + error.code + " " + error.message);
+}
+});
+}
 })
    
 .controller('buddiesCtrl', function($scope,LoginService) {
