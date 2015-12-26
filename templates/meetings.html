@@ -1,7 +1,7 @@
 <ion-view title="Meetings">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
         <ion-list>
-            <ion-item ng-repeat="meeting in meetings | orderBy: 'distance'" ng-click="setMeeting(meeting.id)" href="#/page9">{{meeting.name + "   " + meeting.distance + " miles away."}}</ion-item>
+            <ion-item ng-repeat="meeting in meetings | orderBy: 'distance'" ng-click="setMeeting(meeting.localID)" >{{meeting.name + " is " + meeting.distance + " miles away."}}</ion-item>
         </ion-list>
     </ion-content>
 </ion-view>

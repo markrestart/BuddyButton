@@ -6,7 +6,7 @@ angular.module('app.services', [])
 
 .service('MeetingService', [function(){
 this.selectedMeeting;
-
+this.myLocation;
 }])
 
 .service('LoginService', [function(){

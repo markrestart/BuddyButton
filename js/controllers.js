@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
   
-.controller('loginCtrl', function($scope,$location,LoginService) {
+.controller('loginCtrl', function($scope,$state,LoginService) {
   $scope.data = {};
  
 $scope.loginEmail = function(){
@@ -10,7 +10,7 @@ $scope.loginEmail = function(){
 		LoginService.isLoggedIn = true;
 		LoginService.user = user;
 //		alert("success!");
-		$location.path('/page4/page5');
+		$state.go('tabsController.newMeeting');
     },
     error: function(user, error) {
       // The login failed. Check error to see why.
@@ -20,7 +20,7 @@ $scope.loginEmail = function(){
 };
 })
    
-.controller('signupCtrl', function($scope,$location) {
+.controller('signupCtrl', function($scope,$state) {
   $scope.data = {};
  
 $scope.signupEmail = function(){
@@ -38,7 +38,7 @@ $scope.signupEmail = function(){
     success: function(user) {
       // Hooray! Let them use the app now.
       alert("success! Please log in.");
-	  $location.path("/page1");
+	  $state.go("login");
     },
     error: function(user, error) {
       // Show the error message somewhere and let the user try again.
@@ -54,7 +54,7 @@ $scope.signupEmail = function(){
 
 })
    
-.controller('newMeetingCtrl', function($scope,LoginService,MeetingService,$location) {
+.controller('newMeetingCtrl', function($scope,LoginService,MeetingService,$state) {
 	$scope.listing ={};
 	console.log(LoginService.user);
 
@@ -62,6 +62,7 @@ $scope.signupEmail = function(){
 		success: function (point) {
 			//use current location
 			$scope.myLocation = point;
+			MeetingService.myLocation = point;
 		}
 	});
 	
@@ -81,7 +82,7 @@ $scope.signupEmail = function(){
 success: function(myMeeting) {
 // The save was successful.
       MeetingService.selectedMeeting = myMeeting;
-	  $location.path("/page9");
+	  $state.go("veiwMeeting");
 },
 error: function(myMeeting, error) {
 // The save failed.  Error is an instance of Parse.Error.
@@ -95,26 +96,32 @@ error: function(myMeeting, error) {
 
 })
    
-.controller('meetingsCtrl', function($scope,MeetingService,LoginService) {
+.controller('meetingsCtrl', function($scope,MeetingService,LoginService,$state) {
 $scope.meetingsList = [];
 var query = new Parse.Query('Meetings');
 query.find({
   success: function(results) {
-	console.log("Results: " + results[0];
-	$scope.meettings = [];
+	$scope.localMeetings = results;
+	$scope.meetings = [];
   for (i = 0; i < results.length; i++) { 
-	$scope.themeeting = {};
+	$scope.theMeeting = {};
+	$scope.theMeeting.localID = i;
 	$scope.theMeeting.name = results[i].get("Name");
 	$scope.theMeeting.details = results[i].get("Details");
 	$scope.theMeeting.time = results[i].get("Time");
 	$scope.theMeeting.location = results[i].get("Location");
-	$scope.meettings.push(theMeeting);
+	$scope.meetings.push($scope.theMeeting);
 }
   },
   error: function(error) {
     // error is an instance of Parse.Error.
   }
 });
+
+	$scope.setMeeting=function(localMeetingID){
+		MeetingService.selectedMeeting = $scope.localMeetings[localMeetingID];
+		$state.go("veiwMeeting");
+	}
   
 })
       
@@ -129,14 +136,5 @@ query.find({
 	$scope.meeting.time = MeetingService.selectedMeeting.get("Time");
 	$scope.meeting.location = MeetingService.selectedMeeting.get("Location");
 	$scope.meeting.attending = MeetingService.selectedMeeting.get("Attending");
-	
-//		Parse.GeoPoint.current({
-//		success: function (point) {
-			//use current location
-//			currentLocation = point;
-//			console.log(currentLocation + " is " + point);
-//		}
-//	});
-
-//	$scope.meeting.distance = currentLocation.milesTo($scope.meeting.location);
+	$scope.meeting.distance = MeetingService.myLocation.milesTo($scope.meeting.location);
 })

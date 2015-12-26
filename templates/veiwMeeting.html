@@ -3,7 +3,7 @@
         <h1>{{meeting.name}}</h1>
 		<ion-list>
             <p>{{meeting.details}}</p>
-			<p>{{meeting.location + "miles to meeting."}}</p>
+			<p>{{meeting.distance + "miles to meeting."}}</p>
 			<p>{{"Until " + meeting.time}}</p>
 			<p>{{"Buddies attending:"}}</p>
 			<p ng-repeat="user in meeting.attending">{{user}}</p>
